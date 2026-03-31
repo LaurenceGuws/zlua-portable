@@ -2,11 +2,22 @@
 
 Small reusable Zig helpers for embedding Lua 5.4 through the C API.
 
+[![Release](https://img.shields.io/github/v/release/LaurenceGuws/zlua-portable?include_prereleases&label=release)](https://github.com/LaurenceGuws/zlua-portable/releases)
+[![Used By](https://img.shields.io/badge/used%20by-zide-1f6feb)](https://github.com/LaurenceGuws/Zide)
+[![Used By](https://img.shields.io/badge/used%20by-zbar-bb6b20)](https://github.com/LaurenceGuws/zbar)
+
 Current surface:
 
 - `api.State`: Lua state lifecycle and stack helpers
 - `api.TableIter`: table iteration
 - `reader.Reader`: typed table access helpers for config-style Lua tables
+
+## Related Projects
+
+- [Zide](https://github.com/LaurenceGuws/Zide) consumes `zlua-portable` as the
+  shared low-level Lua package for its config layer.
+- [zbar](https://github.com/LaurenceGuws/zbar) consumes `zlua-portable` for its
+  schema-backed Lua config loading path.
 
 ## Status
 
