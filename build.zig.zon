@@ -1,12 +1,14 @@
 .{
     .name = .zlua_portable,
-    .version = "0.1.0",
+    .version = "0.1.0-beta.1",
     .fingerprint = 0x19731bfc9644ba7b,
     .minimum_zig_version = "0.15.2",
     .dependencies = .{},
     .paths = .{
         "build.zig",
         "build.zig.zon",
+        "docs",
+        "RELEASING.md",
         "src",
         "README.md",
     },

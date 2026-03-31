@@ -14,12 +14,33 @@ This package is intentionally small. It extracts the generic Lua runtime pieces
 from `zbar` so other Zig projects such as `zide` can depend on one shared code
 path instead of copying the same helpers.
 
+Current published version line:
+
+- package version: `0.1.0-beta.1`
+- release tag: `v0.1.0-beta.1`
+
 ## Requirements
 
 - Zig `0.15.2`
 - Lua 5.4 development headers and library available through `pkg-config`
 
 ## Usage
+
+For local sibling development:
+
+```zig
+.zlua_portable = .{
+    .path = "../zlua-portable",
+},
+```
+
+For pinned release-tag consumption:
+
+```bash
+zig fetch --save git+https://github.com/LaurenceGuws/zlua-portable#v0.1.0-beta.1
+```
+
+Then wire the dependency into your build graph:
 
 Add the package as a dependency, then import it from your build graph:
 
@@ -41,3 +62,7 @@ const zlua_portable = @import("zlua_portable");
 const api = zlua_portable.api;
 const reader = zlua_portable.reader;
 ```
+
+Release notes:
+
+- [v0.1.0-beta.1](docs/releases/v0.1.0-beta.1.md)
