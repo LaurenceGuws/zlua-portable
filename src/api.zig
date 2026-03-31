@@ -21,6 +21,10 @@ pub const State = struct {
         return .{ .raw = raw };
     }
 
+    pub fn fromRaw(raw: *c.lua_State) State {
+        return .{ .raw = raw };
+    }
+
     pub fn deinit(self: State) void {
         c.lua_close(self.raw);
     }
