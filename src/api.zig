@@ -1,4 +1,8 @@
 const std = @import("std");
+const trace = @import("trace.zig");
+
+var traced_from_raw = false;
+var traced_load_file = false;
 
 pub const c = @cImport({
     @cInclude("lua.h");
@@ -22,6 +26,7 @@ pub const State = struct {
     }
 
     pub fn fromRaw(raw: *c.lua_State) State {
+        trace.emitOnce(&traced_from_raw, "api.fromRaw raw={*}", .{raw});
         return .{ .raw = raw };
     }
 
@@ -30,6 +35,7 @@ pub const State = struct {
     }
 
     pub fn loadFile(self: State, allocator: std.mem.Allocator, path: []const u8) !void {
+        trace.emitOnce(&traced_load_file, "api.loadFile path={s}", .{path});
         const path_z = try allocator.dupeZ(u8, path);
         defer allocator.free(path_z);
 
@@ -72,8 +78,20 @@ pub const State = struct {
         return c.lua_isinteger(self.raw, idx) != 0;
     }
 
+    pub fn isNumber(self: State, idx: c_int) bool {
+        return c.lua_isnumber(self.raw, idx) != 0;
+    }
+
+    pub fn isBoolean(self: State, idx: c_int) bool {
+        return c.lua_type(self.raw, idx) == c.LUA_TBOOLEAN;
+    }
+
     pub fn readInteger(self: State, idx: c_int) i64 {
         return c.lua_tointegerx(self.raw, idx, null);
+    }
+
+    pub fn readNumber(self: State, idx: c_int) f64 {
+        return c.lua_tonumberx(self.raw, idx, null);
     }
 
     pub fn readBoolean(self: State, idx: c_int) bool {

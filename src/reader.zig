@@ -1,5 +1,10 @@
 const std = @import("std");
 const api = @import("api.zig");
+const trace = @import("trace.zig");
+
+var traced_field_string = false;
+var traced_bool_field = false;
+var traced_number_field = false;
 
 pub const Reader = struct {
     state: api.State,
@@ -36,6 +41,13 @@ pub const Reader = struct {
         }
     }
 
+    pub fn fieldString(self: Reader, field: []const u8) ?[]const u8 {
+        self.state.getField(self.index, field);
+        defer self.state.pop(1);
+        trace.emitOnce(&traced_field_string, "reader.fieldString field={s}", .{field});
+        return self.state.readString(-1);
+    }
+
     pub fn optionalStringOwned(self: Reader, field: []const u8, target: *?[]u8) !void {
         self.state.getField(self.index, field);
         defer self.state.pop(1);
@@ -45,16 +57,39 @@ pub const Reader = struct {
         }
     }
 
+    pub fn boolField(self: Reader, field: []const u8) ?bool {
+        self.state.getField(self.index, field);
+        defer self.state.pop(1);
+        trace.emitOnce(&traced_bool_field, "reader.boolField field={s}", .{field});
+        if (!self.state.isBoolean(-1)) return null;
+        return self.state.readBoolean(-1);
+    }
+
     pub fn intInto(self: Reader, comptime T: type, field: []const u8, target: *T) void {
         self.state.getField(self.index, field);
         defer self.state.pop(1);
         if (self.state.isInteger(-1)) target.* = @intCast(self.state.readInteger(-1));
     }
 
+    pub fn intField(self: Reader, field: []const u8) ?i64 {
+        self.state.getField(self.index, field);
+        defer self.state.pop(1);
+        if (!self.state.isInteger(-1)) return null;
+        return self.state.readInteger(-1);
+    }
+
     pub fn boolInto(self: Reader, field: []const u8, target: *bool) void {
         self.state.getField(self.index, field);
         defer self.state.pop(1);
         if (self.state.valueType(-1) == api.c.LUA_TBOOLEAN) target.* = self.state.readBoolean(-1);
+    }
+
+    pub fn numberField(self: Reader, field: []const u8) ?f64 {
+        self.state.getField(self.index, field);
+        defer self.state.pop(1);
+        trace.emitOnce(&traced_number_field, "reader.numberField field={s}", .{field});
+        if (!self.state.isNumber(-1)) return null;
+        return self.state.readNumber(-1);
     }
 
     pub fn arrayLen(self: Reader) usize {
