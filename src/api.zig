@@ -4,11 +4,7 @@ const trace = @import("trace.zig");
 var traced_from_raw = false;
 var traced_load_file = false;
 
-pub const c = @cImport({
-    @cInclude("lua.h");
-    @cInclude("lauxlib.h");
-    @cInclude("lualib.h");
-});
+pub const c = @import("c");
 
 pub const LuaError = error{
     OutOfMemory,

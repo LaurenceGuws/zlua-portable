@@ -27,13 +27,13 @@ path instead of copying the same helpers.
 
 Current published version line:
 
-- package version: `0.1.0-beta.1`
-- release tag: `v0.1.0-beta.1`
+- package version: `0.1.0-beta.2`
+- release tag: `v0.1.0-beta.2`
 
 ## Requirements
 
 - Zig `0.15.2`
-- Lua 5.4 development headers and library available through `pkg-config`
+- Zig package-managed `ziglua` dependency for Lua headers/library
 
 ## Usage
 
@@ -62,8 +62,6 @@ const lua_pkg = b.dependency("zlua_portable", .{
 });
 
 exe.root_module.addImport("zlua_portable", lua_pkg.module("zlua_portable"));
-exe.linkLibC();
-exe.root_module.linkSystemLibrary("lua5.4", .{ .use_pkg_config = .force });
 ```
 
 Then in Zig:
@@ -77,3 +75,4 @@ const reader = zlua_portable.reader;
 Release notes:
 
 - [v0.1.0-beta.1](docs/releases/v0.1.0-beta.1.md)
+- [v0.1.0-beta.2](docs/releases/v0.1.0-beta.2.md)
